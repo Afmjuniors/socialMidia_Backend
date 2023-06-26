@@ -1,13 +1,20 @@
 import psycopg2
 
 
-class Base_Database_Postres:
+class BaseDatabasePostres:
     def __init__(self,  database):
         self.host = '127.0.0.1'
         self.database = database
         self.user = 'postgres'
         self.password = '123456'
         self.connection = None
+
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.disconnect()
 
     def connect(self):
         try:
@@ -19,24 +26,21 @@ class Base_Database_Postres:
             )
             print("Conexão estabelecida com o banco de dados PostgreSQL!")
         except psycopg2.Error as e:
-            print(f"Erro ao conectar ao banco de dados PostgreSQL: {e}")
+            raise Exception(f"Erro ao conectar ao banco de dados PostgreSQL: {e}")
 
     def execute_query(self, query):
         if self.connection is None:
-            print("A conexão com o banco de dados não foi estabelecida.")
-            return
+            raise Exception("A conexão com o banco de dados não foi estabelecida.")
 
         try:
             cursor = self.connection.cursor()
             cursor.execute(query)
             rows = cursor.fetchall()
 
-            for row in rows:
-                print(row)
-
             cursor.close()
+            return rows
         except psycopg2.Error as e:
-            print(f"Erro ao executar a consulta: {e}")
+            raise Exception(f"Erro ao executar a consulta: {e}")
 
     def disconnect(self):
         if self.connection is not None:
