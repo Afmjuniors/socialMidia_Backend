@@ -1,0 +1,17 @@
+# Ignorar arquivos de byte compilados (.pyc, .pyo, __pycache__)
+*.pyc
+*.pyo
+__pycache__
+
+# Ignorar arquivos gerados pelo ambiente de desenvolvimento (por exemplo, IDEs)
+.idea/
+.vscode/
+
+# Ignorar arquivos de ambiente virtual
+venv/
+env/
+
+# Ignorar logs e arquivos temporários
+*.log
+*.swp
+*.tmp
