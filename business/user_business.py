@@ -1,4 +1,7 @@
 from typing import List
+from datetime import date
+
+from uteis.helper import str_para_date
 from models.user import User
 
 
@@ -21,9 +24,24 @@ class UserBusiness:
 
         return users
 
-    def create_user(self, name, password):
-        user = User(name=name, password=password)
+    def create_user(self, name, email, date_birth, password):
+        id_user=0
+        type_user = 'NORMAL'
+        created_date = date.today()
+
+        user = User(
+            id_user,
+            type_user,
+            name,
+            email,
+            str_para_date(date_birth),
+            created_date,
+            password
+        )
         self.users_db.create_user(user)
+        return {
+            "message":"Usuario criado com sucesso"
+        }
 
     def edit_user(self, user_id, new_name, new_password):
         self.users_db.edit_user(user_id, new_name, new_password)

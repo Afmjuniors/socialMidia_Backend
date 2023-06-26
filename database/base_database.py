@@ -1,12 +1,16 @@
+import os
+from dotenv import load_dotenv
 import psycopg2
 
 
 class BaseDatabasePostres:
     def __init__(self,  database):
-        self.host = '127.0.0.1'
+        load_dotenv()
+
+        self.host = os.getenv('DB_HOST')
         self.database = database
-        self.user = 'postgres'
-        self.password = '123456'
+        self.user = os.getenv('DB_USER')
+        self.password = os.getenv('DB_PASSWORD')
         self.connection = None
 
     def __enter__(self):
@@ -28,7 +32,7 @@ class BaseDatabasePostres:
         except psycopg2.Error as e:
             raise Exception(f"Erro ao conectar ao banco de dados PostgreSQL: {e}")
 
-    def execute_query(self, query):
+    def execute_query_get(self, query):
         if self.connection is None:
             raise Exception("A conexão com o banco de dados não foi estabelecida.")
 
@@ -39,6 +43,19 @@ class BaseDatabasePostres:
 
             cursor.close()
             return rows
+        except psycopg2.Error as e:
+            raise Exception(f"Erro ao executar a consulta: {e}")
+
+    def execute_query(self, query):
+        if self.connection is None:
+            raise Exception("A conexão com o banco de dados não foi estabelecida.")
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query)
+            self.connection.commit()  # Comitar as alterações no banco de dados
+
+            cursor.close()
         except psycopg2.Error as e:
             raise Exception(f"Erro ao executar a consulta: {e}")
 
