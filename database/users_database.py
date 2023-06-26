@@ -9,7 +9,7 @@ class UsersDatabase(BaseDatabasePostres):
         try:
             query = "SELECT * FROM users"
             self.connect()
-            rows = self.execute_query(query)
+            rows = self.execute_query_get(query)
             self.disconnect()
 
             return rows
@@ -19,7 +19,13 @@ class UsersDatabase(BaseDatabasePostres):
 
     def create_user(self, user):
         try:
-            query = "INSERT INTO users (name, password) VALUES ('{}', '{}')".format(user.name, user.password)
+            query = "INSERT INTO users (type, name, email, date_birth, created_date, password) VALUES ('{}', '{}', '{}', '{}', '{}', '{}')".format(
+                user.type_user,
+                user.name,
+                user.email,
+                user.date_birth,
+                user.created_date,
+                user.password)
             self.connect()
             self.execute_query(query)
             self.disconnect()
@@ -44,4 +50,3 @@ class UsersDatabase(BaseDatabasePostres):
             self.disconnect()
         except Exception as e:
             raise Exception("Erro ao excluir usuário: {}".format(str(e)))
-

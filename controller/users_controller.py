@@ -17,10 +17,13 @@ class UserController:
     def create_user(self):
         try:
             user_data = request.json
+
             name = user_data.get('name')
+            email = user_data.get('email')
+            date_birth = user_data.get('date_birth')
             password = user_data.get('password')
 
-            self.user_business.create_user(name, password)
+            self.user_business.create_user(name, email, date_birth, password)
 
             return make_response(jsonify({'message': 'Usuário cadastrado com sucesso'}))
         except Exception as e:
@@ -38,8 +41,8 @@ class UserController:
     def edit_user(self, user_id):
         try:
             user_data = request.json
-            new_name = user_data.get('new_name')
-            new_password = user_data.get('new_password')
+            new_name = user_data.get('name')
+            new_password = user_data.get('password')
 
             self.user_business.edit_user(user_id, new_name, new_password)
 
